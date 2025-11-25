@@ -6,209 +6,245 @@
 <title>Adivinar Número – Daltonismo Friendly</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background: #000;
-        margin: 0;
-        color: white;
-    }
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background: #000;
+    margin: 0;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
-    .container {
-        background: #111;
-        padding: 20px;
-        width: 340px;
-        text-align: center;
-        border-radius: 10px;
-        box-shadow: 0 0 10px #000;
-    }
+.container {
+    background: #111;
+    padding: 20px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000;
+}
 
-    /* ⚠ Aviso de no repetición */
-    .warning {
-        background: #222;
-        padding: 8px;
-        color: #FFE600;
-        font-size: 15px;
-        border-radius: 6px;
-        margin-bottom: 10px;
-        font-weight: bold;
-    }
+h1 { margin: 0 0 10px 0; }
 
-    input {
-        width: 100%;
-        font-size: 26px;
-        text-align: center;
-        padding: 10px;
-        margin-bottom: 15px;
-        background: #fff;
-        color: #000;
-        border-radius: 6px;
-        border: none;
-    }
+.warning {
+    background: #222;
+    padding: 8px;
+    color: #FFE600;
+    font-size: 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
 
-    .keyboard button {
-        width: 30%;
-        padding: 10px;
-        margin: 4px;
-        font-size: 20px;
-    }
+.config-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
 
-    .btn-clear { background: #777; color: white; }
-    .btn-ok { background: #4CAF50; color: white; }
+.btn-settings {
+    flex: 1;
+    padding: 10px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
 
-    .btn-resetgame {
-        margin-top: 10px;
-        width: 100%;
-        padding: 10px;
-        background: #008CBA;
-        color: white;
-        font-size: 18px;
-        border: none;
-        border-radius: 6px;
-    }
+.settings-box {
+    background: #222;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: none;
+    text-align: left;
+}
+.settings-box label { color: #fff; display:block; margin-bottom:8px; font-size:15px; }
+.settings-box select, .settings-box input[type="checkbox"] { margin-right:8px; }
 
-    .btn-dificultad {
-        margin-top: 10px;
-        width: 100%;
-        padding: 10px;
-        background: #ff9800;
-        color: white;
-        font-size: 18px;
-        border: none;
-        border-radius: 6px;
-    }
+#modoTxt {
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #00e5ff;
+    font-weight: bold;
+}
 
-    .correct {
-        background: #0057FF;
-        color: #fff;
-        padding: 5px 8px;
-        margin: 2px;
-        border-radius: 6px;
-        border: 3px solid #003FCC;
-        font-weight: bold;
-        display: inline-block;
-    }
+input#inputGuess {
+    width: 100%;
+    font-size: 26px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 12px;
+    background: #fff;
+    color: #000;
+    border-radius: 6px;
+    border: none;
+    box-sizing: border-box;
+}
 
-    .misplaced {
-        background: #FF2B2B;
-        color: #fff;
-        padding: 5px 8px;
-        margin: 2px;
-        border-radius: 6px;
-        border: 3px dotted #B80000;
-        font-weight: bold;
-        display: inline-block;
-    }
+.keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
+.keyboard button {
+    width: 30%;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
 
-    .wrong {
-        background: #BFBFBF;
-        color: #000;
-        padding: 5px 8px;
-        margin: 2px;
-        border-radius: 6px;
-        border: 2px solid #8F8F8F;
-        font-weight: bold;
-        display: inline-block;
-    }
+.btn-clear { background: #777; color: white; }
+.btn-ok { background: #4CAF50; color: white; }
 
-    .info-box {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        background: #222;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 14px;
-    }
+.btn-resetgame {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background: #008CBA;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+}
 
-    h3 {
-        margin-top: 15px;
-        margin-bottom: 5px;
-    }
+.btn-dificultad {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background: #ff9800;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+}
 
-    footer {
-        margin-top: 20px;
-        text-align: center;
-        font-size: 12px;
-        color: #aaa;
-        padding: 10px 0;
-    }
+.correct { background: #0057FF; color: #fff; padding: 5px 8px; margin: 2px; border-radius: 6px; border: 3px solid #003FCC; font-weight: bold; display: inline-block; }
+.misplaced { background: #FF2B2B; color: #fff; padding: 5px 8px; margin: 2px; border-radius: 6px; border: 3px dotted #B80000; font-weight: bold; display: inline-block; }
+.wrong { background: #BFBFBF; color: #000; padding: 5px 8px; margin: 2px; border-radius: 6px; border: 2px solid #8F8F8F; font-weight: bold; display: inline-block; }
 
-    /* ✔ ARREGLO DEL LOGO — AHORA SE VE */
-    footer img.logo-footer {
-        width: 100px;
-        opacity: 1;
-        display: block;
-        margin: auto;
-        margin-bottom: 5px;
-    }
+.info-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    background: #222;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#attempts { margin-top: 12px; text-align: left; max-height: 180px; overflow:auto; }
+#result { margin-top: 10px; min-height: 30px; }
+
+footer {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    padding: 10px 0;
+    width: 100%;
+    max-width: 420px;
+}
+
+footer img.logo-footer {
+    max-width: 150px;
+    width: 60%;
+    height: auto;
+    display: block;
+    margin: 6px auto;
+}
+
+@media (max-width: 420px) {
+    .keyboard button { font-size: 18px; padding: 9px; }
+    .container { padding: 14px; }
+}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-    <h1>Adiviná el número</h1>
+<h1>Adiviná el número</h1>
 
-    <!-- ⚠ Aviso agregado -->
-    <div class="warning">⚠ Los números no se repiten. Todos los dígitos son distintos.</div>
+<div class="warning">⚠ Los números pueden repetirse o no según configuración</div>
 
-    <p id="txtCifras">Intentá adivinar un número de 4 cifras</p>
+<div class="config-row">
+    <button class="btn-settings" onclick="toggleSettings()">⚙ Configuración</button>
+    <button class="btn-dificultad" onclick="cambiarModo()">🔥 Cambiar modo</button>
+</div>
 
-    <div class="info-box">
-        <span>⏱ Tiempo: <b id="time">0.0s</b></span>
-        <span>🏆 Récord: <b id="record">--</b></span>
-    </div>
+<div id="settingsBox" class="settings-box">
+    <label><input type="checkbox" id="chkRepetir"> Permitir números repetidos</label>
+    <label><input type="checkbox" id="chkPistas" checked> Mostrar pistas (✔ y ↺)</label>
+    <label>
+        Cifras:
+        <select id="selCifras">
+            <option value="4" selected>4 cifras</option>
+            <option value="5">5 cifras</option>
+        </select>
+    </label>
+    <button class="btn-resetgame" onclick="guardarSettings()">Guardar configuración</button>
+</div>
 
-    <input type="text" id="inputGuess" maxlength="4" readonly>
+<div id="modoTxt">Modo actual: 4 cifras · Repetidos: NO · Pistas: SÍ</div>
+<p id="txtCifras">Intentá adivinar un número de 4 cifras</p>
 
-    <div class="keyboard">
-        <button onclick="addNum('1')">1</button>
-        <button onclick="addNum('2')">2</button>
-        <button onclick="addNum('3')">3</button>
-        <button onclick="addNum('4')">4</button>
-        <button onclick="addNum('5')">5</button>
-        <button onclick="addNum('6')">6</button>
-        <button onclick="addNum('7')">7</button>
-        <button onclick="addNum('8')">8</button>
-        <button onclick="addNum('9')">9</button>
-        <button onclick="addNum('0')">0</button>
+<div class="info-box">
+    <span>⏱ Tiempo: <b id="time">0.0s</b></span>
+    <span>🏆 Récord: <b id="record">--</b></span>
+</div>
 
-        <button class="btn-clear" onclick="clearInput()">RESET</button>
-        <button class="btn-ok" onclick="checkGuess()">ENTER</button>
-    </div>
+<input type="text" id="inputGuess" maxlength="4" readonly placeholder="----">
 
-    <button class="btn-dificultad" onclick="cambiarModo()">🔥 Cambiar modo: <span id="modoTxt">Normal</span></button>
+<div class="keyboard" id="keyboard">
+    <button onclick="addNum('1')">1</button>
+    <button onclick="addNum('2')">2</button>
+    <button onclick="addNum('3')">3</button>
+    <button onclick="addNum('4')">4</button>
+    <button onclick="addNum('5')">5</button>
+    <button onclick="addNum('6')">6</button>
+    <button onclick="addNum('7')">7</button>
+    <button onclick="addNum('8')">8</button>
+    <button onclick="addNum('9')">9</button>
+    <button onclick="addNum('0')">0</button>
+    <button class="btn-clear" onclick="clearInput()">RESET</button>
+    <button class="btn-ok" onclick="checkGuess()">ENTER</button>
+</div>
 
-    <div id="attempts"></div>
-    <div id="result"></div>
+<div id="attempts"></div>
+<div id="result"></div>
 
-    <button id="btnNuevo" class="btn-resetgame" onclick="resetGame()">🔄 Nuevo Juego</button>
-    <button id="btnResetRecord" class="btn-resetgame" onclick="resetRecord()">🧹 Reset Record</button>
+<button id="btnNuevo" class="btn-resetgame" onclick="resetGame()">🔄 Nuevo Juego</button>
+<button id="btnResetRecord" class="btn-resetgame" onclick="resetRecord()">🧹 Reset Record</button>
 
-    <h3>Top 5</h3>
-    <div id="top5"></div>
+<h3>Top 5</h3>
+<div id="top5"></div>
 </div>
 
 <footer class="footer">
-    <img src="imagenes/macher.png" class="logo-footer">
+    <img src="imagenes/macher.png" class="logo-footer" alt="Logo">
     <p>&copy; Copyright mm@cher - 2025</p>
 </footer>
 
 <script>
-/* --- JS IGUAL AL TUYO, NO LO TOQUÉ MÁS QUE LO NECESARIO --- */
+let permitirRepetidos = false;
+let mostrarPistas = true;
+let cifras = 4;
 
-let modoDificil = false;
-let secret = generarNumero();
+let secret = "";
 let intentos = 0;
 let startTime = null;
 let timer = null;
-
-console.log("SECRETO:", secret);
 
 const sndWin = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_1d12ec4b8d.mp3");
 const sndFail = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_4cb34d8160.mp3");
@@ -217,30 +253,56 @@ const sndWrong = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_024e0
 let record = localStorage.getItem("recordTiempo");
 if (record) document.getElementById("record").textContent = record + "s";
 
+function toggleSettings() {
+    const box = document.getElementById("settingsBox");
+    box.style.display = (box.style.display === "none" || box.style.display === "") ? "block" : "none";
+}
+
+function cambiarModo() {
+    cifras = (cifras === 4) ? 5 : 4;
+    document.getElementById("selCifras").value = cifras;
+    guardarSettings();
+}
+
+function guardarSettings() {
+    permitirRepetidos = document.getElementById("chkRepetir").checked;
+    mostrarPistas = document.getElementById("chkPistas").checked;
+    cifras = parseInt(document.getElementById("selCifras").value);
+
+    document.getElementById("txtCifras").textContent =
+        "Intentá adivinar un número de " + cifras + " cifras";
+
+    document.getElementById("inputGuess").maxLength = cifras;
+
+    actualizarModoTxt();
+    toggleSettings();
+    resetGame();
+}
+
+function actualizarModoTxt() {
+    const repTxt = permitirRepetidos ? "SÍ" : "NO";
+    const pistasTxt = mostrarPistas ? "SÍ" : "NO";
+    document.getElementById("modoTxt").textContent =
+        `Modo actual: ${cifras} cifras · Repetidos: ${repTxt} · Pistas: ${pistasTxt}`;
+}
+
 function generarNumero() {
-    let digitos = modoDificil ? 5 : 4;
     let arr = [];
-    while (arr.length < digitos) {
+    while (arr.length < cifras) {
         let n = Math.floor(Math.random() * 10);
-        if (!arr.includes(n)) arr.push(n);
+        if (!permitirRepetidos) {
+            if (!arr.includes(n)) arr.push(n);
+        } else {
+            arr.push(n);
+        }
     }
     return arr.join("");
 }
 
-function cambiarModo() {
-    modoDificil = !modoDificil;
-    document.getElementById("modoTxt").textContent = modoDificil ? "Difícil (5 cifras)" : "Normal (4 cifras)";
-    document.getElementById("txtCifras").textContent = modoDificil ? "Intentá adivinar un número de 5 cifras" : "Intentá adivinar un número de 4 cifras";
-    let input = document.getElementById("inputGuess");
-    input.value = "";
-    input.maxLength = modoDificil ? 5 : 4;
-    resetGame();
-}
-
 function addNum(n) {
     if (!startTime) iniciarTiempo();
-    let input = document.getElementById("inputGuess");
-    if (input.value.length < input.maxLength) input.value += n;
+    const input = document.getElementById("inputGuess");
+    if (input.value.length < cifras) input.value += n;
 }
 
 function clearInput() { document.getElementById("inputGuess").value = ""; }
@@ -257,121 +319,87 @@ function detenerTiempo() { clearInterval(timer); }
 
 function checkGuess() {
     let guess = document.getElementById("inputGuess").value;
-    let L = modoDificil ? 5 : 4;
-
-    if (guess.length !== L) {
-        alert("Ingresá " + L + " números");
+    if (guess.length !== cifras) { alert("Ingresá " + cifras + " números"); return; }
+    if (!permitirRepetidos && (new Set(guess).size !== guess.length)) {
+        alert("No están permitidos números repetidos.");
         return;
     }
 
     intentos++;
+    let secretCount = {}; for (let d of secret) secretCount[d]=(secretCount[d]||0)+1;
+    let usedSecret = {}; let marks = new Array(cifras).fill(null);
 
-    let secretCount = {};
-    for (let d of secret) secretCount[d] = (secretCount[d] || 0) + 1;
-
-    let usedSecret = {};
-    let marks = [];
-
-    for (let i = 0; i < L; i++) {
-        if (guess[i] === secret[i]) {
-            marks[i] = `<span class="correct">${guess[i]} ✔</span>`;
-            usedSecret[guess[i]] = (usedSecret[guess[i]] || 0) + 1;
-        } else marks[i] = null;
+    for (let i=0;i<cifras;i++){
+        if(guess[i]===secret[i]){
+            marks[i] = mostrarPistas ? `<span class="correct">${guess[i]} ✔</span>` : `<span class="correct">${guess[i]}</span>`;
+            usedSecret[guess[i]]=(usedSecret[guess[i]]||0)+1;
+        }
     }
 
-    for (let i = 0; i < L; i++) {
-        if (marks[i]) continue;
-        if (secret.includes(guess[i]) &&
-            (usedSecret[guess[i]] || 0) < secretCount[guess[i]]) {
-            marks[i] = `<span class="misplaced">${guess[i]} ↺</span>`;
-            usedSecret[guess[i]] = (usedSecret[guess[i]] || 0) + 1;
+    for (let i=0;i<cifras;i++){
+        if(marks[i]) continue;
+        const g = guess[i];
+        const totalInSecret = secretCount[g]||0;
+        const used = usedSecret[g]||0;
+        if(totalInSecret>used){
+            marks[i]=mostrarPistas ? `<span class="misplaced">${g} ↺</span>` : `<span class="misplaced">${g}</span>`;
+            usedSecret[g]=used+1;
         } else {
-            marks[i] = `<span class="wrong">${guess[i]} ✖</span>`;
+            marks[i]=`<span class="wrong">${g} ✖</span>`;
         }
     }
 
     document.getElementById("attempts").innerHTML =
-        `<div>Intento ${intentos}: ${marks.join("")}</div>` +
+        `<div>Intento ${intentos}: ${marks.join(" ")}</div>` +
         document.getElementById("attempts").innerHTML;
 
-    if (guess === secret) {
-        detenerTiempo();
-        sndWin.play();
-        document.getElementById("result").innerHTML = "🎉 ¡Ganaste! El número era " + secret;
-        let tiempoFinal = parseFloat(document.getElementById("time").textContent);
-        actualizarRecord(tiempoFinal);
-        bloquear();
-        return;
+    if(guess===secret){
+        detenerTiempo(); sndWin.play();
+        document.getElementById("result").innerHTML="🎉 ¡Ganaste! El número era "+secret;
+        let tiempoFinal=parseFloat(document.getElementById("time").textContent)||0;
+        actualizarRecord(tiempoFinal); bloquear(); return;
     }
 
     sndWrong.play();
-
-    if (intentos >= 10) {
-        detenerTiempo();
-        sndFail.play();
-        document.getElementById("result").innerHTML = "❌ Perdiste. El número era " + secret;
-        bloquear();
-    }
-
+    if(intentos>=10){ detenerTiempo(); sndFail.play(); document.getElementById("result").innerHTML="❌ Perdiste. El número era "+secret; bloquear(); }
     clearInput();
 }
 
-function actualizarRecord(t) {
-    let record = localStorage.getItem("recordTiempo");
-    if (!record || t < parseFloat(record)) {
-        localStorage.setItem("recordTiempo", t);
-        document.getElementById("record").textContent = t + "s";
-    }
-
-    let top = JSON.parse(localStorage.getItem("top5") || "[]");
-    top.push(t);
-    top.sort((a, b) => a - b);
-    top = top.slice(0, 5);
-    localStorage.setItem("top5", JSON.stringify(top));
-    mostrarTop5();
+function actualizarRecord(t){
+    let recordLocal=localStorage.getItem("recordTiempo");
+    if(!recordLocal||t<parseFloat(recordLocal)){ localStorage.setItem("recordTiempo",t); document.getElementById("record").textContent=t+"s"; }
+    let top=JSON.parse(localStorage.getItem("top5")||"[]"); top.push(t); top.sort((a,b)=>a-b); top=top.slice(0,5); localStorage.setItem("top5",JSON.stringify(top)); mostrarTop5();
 }
 
-function mostrarTop5() {
-    let top = JSON.parse(localStorage.getItem("top5") || "[]");
-    let html = "";
-    const medallas = ["🥇", "🥈", "🥉"];
-    top.forEach((t, i) => {
-        if (i < 3) html += `<div>${medallas[i]} ${t}s</div>`;
-        else html += `<div>${i + 1}) ${t}s</div>`;
-    });
-    document.getElementById("top5").innerHTML = html;
+function mostrarTop5(){
+    let top=JSON.parse(localStorage.getItem("top5")||"[]"); let html=""; const medallas=["🥇","🥈","🥉"];
+    top.forEach((t,i)=>{ if(i<3) html+=`<div>${medallas[i]} ${t}s</div>`; else html+=`<div>${i+1}) ${t}s</div>`; });
+    document.getElementById("top5").innerHTML=html;
 }
 
-function resetRecord() {
-    localStorage.removeItem("recordTiempo");
-    localStorage.removeItem("top5");
-    document.getElementById("record").textContent = "--";
-    document.getElementById("top5").innerHTML = "";
-    alert("Récords borrados");
+function resetRecord(){ localStorage.removeItem("recordTiempo"); localStorage.removeItem("top5"); document.getElementById("record").textContent="--"; document.getElementById("top5").innerHTML=""; alert("Récords borrados"); }
+
+function bloquear(){ document.querySelectorAll("button").forEach(b=>{if(b.id!=="btnNuevo")b.disabled=true;}); }
+
+function resetGame(){
+    secret=generarNumero(); intentos=0; startTime=null; clearInterval(timer); timer=null;
+    document.getElementById("time").textContent="0.0s";
+    document.getElementById("inputGuess").value=""; document.getElementById("attempts").innerHTML=""; document.getElementById("result").innerHTML="";
+    document.querySelectorAll("button").forEach(b=>b.disabled=false);
+    document.getElementById("inputGuess").maxLength=cifras;
+    document.getElementById("txtCifras").textContent="Intentá adivinar un número de "+cifras+" cifras";
+    actualizarModoTxt();
+    console.log("NUEVO SECRETO:",secret);
 }
 
-function bloquear() {
-    document.querySelectorAll("button").forEach(b => {
-        if (b.id !== "btnNuevo") b.disabled = true;
-    });
+function initFromDefaults(){
+    document.getElementById("chkRepetir").checked=permitirRepetidos;
+    document.getElementById("chkPistas").checked=mostrarPistas;
+    document.getElementById("selCifras").value=cifras;
+    actualizarModoTxt(); resetGame(); mostrarTop5();
 }
 
-function resetGame() {
-    secret = generarNumero();
-    intentos = 0;
-    startTime = null;
-    clearInterval(timer);
-    timer = null;
-    document.getElementById("time").textContent = "0.0s";
-    document.getElementById("inputGuess").value = "";
-    document.getElementById("attempts").innerHTML = "";
-    document.getElementById("result").innerHTML = "";
-    document.querySelectorAll("button").forEach(b => b.disabled = false);
-    console.log("NUEVO SECRETO:", secret);
-}
-
-mostrarTop5();
+initFromDefaults();
 </script>
-
 </body>
 </html>
