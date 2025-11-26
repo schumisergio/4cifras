@@ -20,9 +20,20 @@ input#inputGuess {width:100%; font-size:26px; text-align:center; padding:10px; m
 .keyboard button {width:30%; padding:10px; font-size:20px; border-radius:6px; border:none; cursor:pointer;}
 .btn-clear {background:#777; color:white;}
 .btn-ok {background:#4CAF50; color:white;}
-.correct {background:#0057FF; color:white; padding:5px 8px; margin:2px; border-radius:6px; display:inline-block;}
-.misplaced {background:#FF2B2B; color:white; padding:5px 8px; margin:2px; border-radius:6px; display:inline-block;}
-.wrong {background:#BFBFBF; color:black; padding:5px 8px; margin:2px; border-radius:6px; display:inline-block;}
+.correct, .misplaced, .wrong {
+    display: inline-block;
+    font-weight: bold;
+    line-height: 2;
+    margin: 2px;
+    border-radius: 8px;
+}
+.cuatro { font-size: 24px; padding: 8px 12px; }
+.cinco { font-size: 20px; padding: 6px 10px; }
+
+.correct { background: #0057FF; color: white; }
+.misplaced { background: #FF2B2B; color: white; }
+.wrong { background: #BFBFBF; color: black; }
+
 .info-box {display:flex; justify-content:space-between; margin-bottom:10px; background:#222; padding:5px 10px; border-radius:5px; font-size:14px;}
 #attempts {margin-top:12px; text-align:left; max-height:180px; overflow:auto;}
 #result {margin-top:10px; min-height:30px;}
@@ -91,56 +102,46 @@ footer img.logo-footer {max-width:150px; width:60%; height:auto; display:block; 
 
 <script>
 let permitirRepetidos=false, cifras=4, secret="", intentos=0, startTime=null, timer=null;
+let records = JSON.parse(localStorage.getItem("records")) || {4:[],5:[]};
 
-// Inicializamos records con 4 y 5 cifras si no existen
-let records = JSON.parse(localStorage.getItem("records"));
-if(!records || !records[4] || !records[5]){
-    records = {4:[], 5:[]};
-    localStorage.setItem("records", JSON.stringify(records));
+function toggleSettings(){ const box=document.getElementById("settingsBox"); box.style.display=(box.style.display==="none"||box.style.display==="")?"block":"none"; }
+function guardarSettings(){ 
+    cifras=parseInt(document.getElementById("selCifras").value); 
+    permitirRepetidos=document.getElementById("chkRepetir").checked; 
+    document.getElementById("txtCifras").textContent="Intentá adivinar un número de "+cifras+" cifras"; 
+    document.getElementById("inputGuess").maxLength=cifras; 
+    document.getElementById("modoTxt").textContent=`Modo actual: ${cifras} cifras · Repetidos: ${permitirRepetidos?"SÍ":"NO"}`; 
+    toggleSettings(); resetGame(); actualizarRecords(); 
 }
 
-function toggleSettings(){
-    const box=document.getElementById("settingsBox"); 
-    box.style.display=(box.style.display==="none"||box.style.display==="")?"block":"none";
+function generarNumero(){ 
+    let arr=[]; 
+    while(arr.length<cifras){ 
+        let n=Math.floor(Math.random()*10); 
+        if(!permitirRepetidos && arr.includes(n)) continue; 
+        arr.push(n); 
+    } 
+    return arr.join(""); 
 }
 
-function guardarSettings(){
-    cifras=parseInt(document.getElementById("selCifras").value);
-    permitirRepetidos=document.getElementById("chkRepetir").checked;
-    document.getElementById("txtCifras").textContent="Intentá adivinar un número de "+cifras+" cifras";
-    document.getElementById("inputGuess").maxLength=cifras;
-    document.getElementById("modoTxt").textContent=`Modo actual: ${cifras} cifras · Repetidos: ${permitirRepetidos?"SÍ":"NO"}`;
-    toggleSettings();
-    resetGame();
-    actualizarRecords(); // Actualiza Top5 y récord al cambiar modo
-}
-
-function generarNumero(){
-    let arr=[];
-    while(arr.length<cifras){
-        let n=Math.floor(Math.random()*10);
-        if(!permitirRepetidos && arr.includes(n)) continue;
-        arr.push(n);
-    }
-    return arr.join("");
-}
-
-function addNum(n){if(!startTime) iniciarTiempo(); const input=document.getElementById("inputGuess"); if(input.value.length<cifras) input.value+=n;}
+function addNum(n){ if(!startTime) iniciarTiempo(); const input=document.getElementById("inputGuess"); if(input.value.length<cifras) input.value+=n; }
 function clearInput(){document.getElementById("inputGuess").value="";}
-function iniciarTiempo(){startTime=Date.now(); timer=setInterval(()=>{document.getElementById("time").textContent=((Date.now()-startTime)/1000).toFixed(1)+"s";},100);}
+function iniciarTiempo(){ startTime=Date.now(); timer=setInterval(()=>{document.getElementById("time").textContent=((Date.now()-startTime)/1000).toFixed(1)+"s"; },100);}
 function detenerTiempo(){clearInterval(timer);}
 
 function checkGuess(){
     let guess=document.getElementById("inputGuess").value;
-    if(guess.length!==cifras){alert("Ingresá "+cifras+" números"); return;}
-    if(!permitirRepetidos && (new Set(guess).size!==guess.length)){alert("No están permitidos números repetidos."); return;}
+    if(guess.length!==cifras){ alert("Ingresá "+cifras+" números"); return; }
+    if(!permitirRepetidos && (new Set(guess).size!==guess.length)){ alert("No están permitidos números repetidos."); return; }
     intentos++;
     let secretCount={}, usedSecret={}, marks=new Array(cifras).fill(null);
     for(let d of secret) secretCount[d]=(secretCount[d]||0)+1;
 
+    let clase = cifras===4 ? 'cuatro' : 'cinco';
+
     for(let i=0;i<cifras;i++){
         if(guess[i]===secret[i]){
-            marks[i]=`<span class="correct">${guess[i]}</span>`;
+            marks[i]=`<span class="correct ${clase}">${guess[i]} ✓</span>`;
             usedSecret[guess[i]]=(usedSecret[guess[i]]||0)+1;
         }
     }
@@ -148,73 +149,71 @@ function checkGuess(){
         if(marks[i]) continue;
         let g=guess[i], total=secretCount[g]||0, used=usedSecret[g]||0;
         if(total>used){
-            marks[i]=`<span class="misplaced">${g}</span>`;
+            marks[i]=`<span class="misplaced ${clase}">${g} ↻</span>`;
             usedSecret[g]=used+1;
         } else {
-            marks[i]=`<span class="wrong">${g}</span>`;
+            marks[i]=`<span class="wrong ${clase}">${g}</span>`;
         }
     }
 
     document.getElementById("attempts").innerHTML=`<div>Intento ${intentos}: ${marks.join(" ")}</div>`+document.getElementById("attempts").innerHTML;
 
     if(guess===secret){
-        detenerTiempo(); 
+        detenerTiempo();
         const tiempo=(Date.now()-startTime)/1000;
         alert("🎉 ¡Ganaste! El número era "+secret+" en "+tiempo.toFixed(1)+"s");
-        guardarRecord(tiempo);
-        bloquear(); 
-        return;
+        guardarRecord(tiempo); bloquear(); return;
     }
-    if(intentos>=10){detenerTiempo(); alert("❌ Perdiste. El número era "+secret); bloquear();}
+    if(intentos>=10){ detenerTiempo(); alert("❌ Perdiste. El número era "+secret); bloquear(); }
     clearInput();
 }
 
-function bloquear(){document.querySelectorAll("button").forEach(b=>{if(b.id!=="btnNuevo"&&b.id!=="btnResetRecord")b.disabled=true;});}
+function bloquear(){ document.querySelectorAll("button").forEach(b=>{ if(b.id!=="btnNuevo" && b.id!=="btnResetRecord") b.disabled=true; }); }
 
-function resetGame(){
-    secret=generarNumero(); intentos=0; startTime=null; clearInterval(timer); timer=null;
-    document.getElementById("time").textContent="0.0s";
+function resetGame(){ 
+    secret=generarNumero(); intentos=0; startTime=null; clearInterval(timer); timer=null; 
+    document.getElementById("time").textContent="0.0s"; 
     document.getElementById("inputGuess").value=""; 
     document.getElementById("attempts").innerHTML=""; 
-    document.getElementById("result").innerHTML="";
-    document.querySelectorAll("button").forEach(b=>b.disabled=false);
-    document.getElementById("inputGuess").maxLength=cifras;
-    document.getElementById("txtCifras").textContent="Intentá adivinar un número de "+cifras+" cifras";
-    actualizarRecords();
-    console.log("NUEVO SECRETO:",secret);
+    document.getElementById("result").innerHTML=""; 
+    document.querySelectorAll("button").forEach(b=>b.disabled=false); 
+    document.getElementById("inputGuess").maxLength=cifras; 
+    document.getElementById("txtCifras").textContent="Intentá adivinar un número de "+cifras+" cifras"; 
+    actualizarRecords(); 
+    console.log("NUEVO SECRETO:",secret); 
 }
 
-function guardarRecord(tiempo){
-    let arr = records[cifras];
-    arr.push(tiempo.toFixed(1));
-    arr.sort((a,b)=>a-b);
-    if(arr.length>5) arr = arr.slice(0,5);
-    records[cifras] = arr;
-    localStorage.setItem("records", JSON.stringify(records));
-    actualizarRecords();
+function guardarRecord(tiempo){ 
+    let arr=records[cifras]; 
+    arr.push(tiempo.toFixed(1)); 
+    arr.sort((a,b)=>a-b); 
+    if(arr.length>5) arr=arr.slice(0,5); 
+    records[cifras]=arr; 
+    localStorage.setItem("records", JSON.stringify(records)); 
+    actualizarRecords(); 
 }
 
-function actualizarRecords(){
-    const div = document.getElementById("top5");
-    const arr = records[cifras] || [];
-    if(arr.length===0){ div.innerHTML="<p>No hay récords aún</p>"; document.getElementById("record").textContent="--"; return;}
-    div.innerHTML=arr.map((t,i)=>`<div>${i+1}. ${t}s</div>`).join("");
-    document.getElementById("record").textContent = arr[0] + "s"; // Mejor tiempo como récord
+function actualizarRecords(){ 
+    const div=document.getElementById("top5"); 
+    const arr=records[cifras]||[]; 
+    if(arr.length===0){ div.innerHTML="<p>No hay récords aún</p>"; document.getElementById("record").textContent="--"; return;} 
+    div.innerHTML=arr.map((t,i)=>`<div>${i+1}. ${t}s</div>`).join(""); 
+    document.getElementById("record").textContent=arr[0]+"s"; 
 }
 
-function resetRecord(){
-    records[cifras] = [];
-    localStorage.setItem("records", JSON.stringify(records));
-    actualizarRecords();
+function resetRecord(){ 
+    records[cifras]=[]; 
+    localStorage.setItem("records", JSON.stringify(records)); 
+    actualizarRecords(); 
 }
 
-function initFromDefaults(){
-    document.getElementById("chkRepetir").checked=permitirRepetidos;
-    document.getElementById("selCifras").value=cifras;
-    document.getElementById("modoTxt").textContent=`Modo actual: ${cifras} cifras · Repetidos: NO`;
-    resetGame();
-    actualizarRecords();
+function initFromDefaults(){ 
+    document.getElementById("chkRepetir").checked=permitirRepetidos; 
+    document.getElementById("selCifras").value=cifras; 
+    resetGame(); 
+    actualizarRecords(); 
 }
+
 initFromDefaults();
 </script>
 </body>
